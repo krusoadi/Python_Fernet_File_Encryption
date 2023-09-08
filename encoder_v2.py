@@ -17,8 +17,6 @@ def encrypt(filename:str) -> None:
         iterations = floor(size / reading_unit) -1 #To get the numbers of iterations with the reading unit
         last_size = size - (iterations * reading_unit) #The last size, the remainder, which is smaller than 3MB
         
-
-
         if size <= reading_unit:  #If the size is <= than 3MB it's way easier to read the whole file and encrypt it.
             original = in_file.read()
             encrypted = fernet.encrypt(original)
@@ -63,8 +61,6 @@ def encrypt(filename:str) -> None:
                 gc.collect()
 
         keyfile.write(key) #The key is the last in the .key file so it makes easier to read it back 
-
-
 
 
 def decrypt(filename:str, key: str) -> None:
