@@ -3,6 +3,11 @@ from os import path
 import gc   #Garbage collector
 from math import floor
 
+# TODO : Make a Tkinter UI for the script
+# TODO : Rewrite and refactor to make it more readable and efficient with OOP principles
+# TODO : Check if garbage collector has any effect on the performance, and safety of the script
+# TODO : Segment it into smaller functions, and more files for better readability
+
 def encrypt(filename:str) -> None:
     name, ext = path.splitext(filename)
 
