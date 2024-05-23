@@ -6,7 +6,6 @@ from math import floor
 # TODO : Rewrite and refactor to make it more readable and efficient with OOP principles
 # TODO : Check if garbage collector has any effect on the performance, and safety of the script
 # TODO : Segment it into smaller functions, and more files for better readability
-# TODO : Search for previous version of the script, and compare the two
 # TODO : Make a Tkinter UI for the script
 
 def encrypt(filename:str) -> None:
@@ -119,9 +118,6 @@ def decrypt(filename:str, key: str) -> None:
 
     else:
         print("Unsafe key")
-
-#I'm really thinking about making a Tkinter UI to be less sketchy, but for now it gets the job done. 
-
 
 runtime = True
 
