@@ -3,6 +3,7 @@ from cryptography.fernet import Fernet
 #! Untested Sketch
 
 class Crypto:
+    """Cryptography class for encrypting I/O data"""
     def __init__(self) -> None:
         self.key = None
         self.cryptor = None
