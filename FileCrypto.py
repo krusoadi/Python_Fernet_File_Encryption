@@ -7,10 +7,10 @@ from io import BufferedWriter
 # ! FileCrypto unfinished skeleton
 
 class FileCrypto:
-    def __init__(self, fileName:str, keyFileName:str = "secret.key") -> None:
-        self.fileName, self.fileExtension = path.splitext(fileName)
+    def __init__(self, fileNameIn:str, keyFileName:str = "secret.key") -> None:
+        self.fileName, self.fileExtension = path.splitext(fileNameIn)
         self.keyFileName:str = keyFileName
-        self.size: int = path.getsize(fileName) # Normal file reading size
+        self.size: int = path.getsize(fileNameIn) # Normal file reading size
         self.last_size:int = None # Normal file reading remainder size
         
         self.reading_unit:int = None
@@ -41,7 +41,7 @@ class FileCrypto:
             kfile.write(self.key)            
 
     def _readData(self, buffer: BufferedReader) ->bytes:
-        return buffer.read(self.size)
+        return buffer.read(self.reading_unit)
             
     def _readLastData(self, buffer: BufferedReader) -> bytes:
         return buffer.read(self.last_size)
@@ -78,16 +78,17 @@ class FileCrypto:
     def encrypt(self, reading_unit:int) -> None:
         self._generateKey()
         self._setGenerator()
+        self.reading_unit = reading_unit
         
         with open(self.fileName+self.fileExtension, "rb") as rawFile, open(self.fileName+"_encrypted"+self.fileExtension, "wb") as out:
-            iterations = floor(self.size/ reading_unit)
-            self.last_size = self.size - ((iterations - 1) * reading_unit)
+            iterations = floor(self.size / reading_unit)
+            self.last_size = self.size - (iterations * reading_unit)
             
             if self.size < reading_unit:
                 self._fetchEncryptAndThrow(rawFile, out, True)
                 self.encryptedChunkSize = self.lastEncryptedChunkSize
             else:
-                for i in range(iterations):
+                for i in range(iterations + 1):
                    self._fetchEncryptAndThrow(rawFile, out, i == iterations)
             
             self._writeKeyFileData()
@@ -104,7 +105,7 @@ class FileCrypto:
                 self._fetchDecryptAndThrow(encrypted, rawFile, True)
             
             else:
-                for i in range(iterations + 1):
-                    self._fetchDecryptAndThrow(encrypted, rawFile, i==iterations)
+                for i in range(iterations):
+                    self._fetchDecryptAndThrow(encrypted, rawFile, i==iterations-1)
             
            
