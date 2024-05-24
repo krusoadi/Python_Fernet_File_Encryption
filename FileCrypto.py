@@ -3,8 +3,7 @@ from math import floor
 from cryptography.fernet import Fernet
 from io import BufferedReader
 from io import BufferedWriter
-
-# ! FileCrypto unfinished skeleton
+from ttkbootstrap import DoubleVar
 
 class FileCrypto:
     def __init__(self, fileNameIn:str, keyFileName:str = "secret.key") -> None:
@@ -20,6 +19,10 @@ class FileCrypto:
         
         self.encryptedChunkSize:int = None # Encrypted file write size
         self.lastEncryptedChunkSize:int = None #Encrypted file write size
+        
+        self.progress = 0 # for the UI progressbar
+        self.progressMax = 1 
+        
 
     def _generateKey(self) -> None:
         self.key = Fernet.generate_key()
@@ -74,38 +77,54 @@ class FileCrypto:
             self.encryptedChunkSize = len(encrypted)
     
         self._writeData(encrypted, obuffer)
-    
+        
     def encrypt(self, reading_unit:int) -> None:
         self._generateKey()
         self._setGenerator()
         self.reading_unit = reading_unit
         
+        
         with open(self.fileName+self.fileExtension, "rb") as rawFile, open(self.fileName+"_encrypted"+self.fileExtension, "wb") as out:
             iterations = floor(self.size / reading_unit)
             self.last_size = self.size - (iterations * reading_unit)
             
+            self.progressMax = iterations
+            
             if self.size < reading_unit:
+                self.progressMax = 1
                 self._fetchEncryptAndThrow(rawFile, out, True)
                 self.encryptedChunkSize = self.lastEncryptedChunkSize
+                self.progress += 1
+                    
             else:
                 for i in range(iterations + 1):
-                   self._fetchEncryptAndThrow(rawFile, out, i == iterations)
+                    self._fetchEncryptAndThrow(rawFile, out, i == iterations)
+                    self.progress += 1
             
             self._writeKeyFileData()
                    
-    def decrypt(self, newName:str) -> None:
+    def decrypt(self, newName:str, progressBar:DoubleVar = None) -> None:
         self._retrieveKeyFileData()
         self._setGenerator()
         self.reading_unit = self.encryptedChunkSize
         
         iterations = floor(self.size / self.reading_unit)
         
+        self.progressMax = iterations
+        
         with open(self.fileName+self.fileExtension, "rb") as encrypted, open(newName, "wb") as rawFile:
             if self.size == self.reading_unit:
+                self.progressMax = 1
                 self._fetchDecryptAndThrow(encrypted, rawFile, True)
+                if progressBar != None:
+                    self.progress += 1
+                    self.update_progress(progressBar)
             
             else:
                 for i in range(iterations):
                     self._fetchDecryptAndThrow(encrypted, rawFile, i==iterations-1)
+                    
+                    if progressBar != None:
+                        self.progress += 1
+                        self.update_progress(progressBar)
             
-           
