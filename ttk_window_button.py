@@ -1,6 +1,8 @@
 import threading
 from FileCrypto import FileCrypto
 import ttkbootstrap as ttk
+from tkinter.filedialog import askopenfilename
+
 
 File = FileCrypto("asd.txt")
 root = ttk.Window(themename="darkly")
@@ -11,7 +13,7 @@ def update_progress():
         root.after(500, update_progress)  # update every 500ms
 
 def encrypt_file():
-    threading.Thread(target=File.encrypt, args=(100,), daemon=True).start()
+    threading.Thread(target=File.encrypt, args=(1000,), daemon=True).start()
     root.after(500, update_progress)  # Schedule the first progress update
 
 progress = ttk.DoubleVar(root, 0)
