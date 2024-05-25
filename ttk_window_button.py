@@ -24,5 +24,3 @@ button = ttk.Button(style="success", text="Press", command=encrypt_file)
 button.pack()
 
 root.mainloop()
-
-File.decrypt("final.txt")

@@ -22,4 +22,4 @@ with open("final.txt","r") as final, open("asd.txt", "r") as original:
             print("\nnot ")
             break
         
-    print("ok\n")
+    print("ok")
