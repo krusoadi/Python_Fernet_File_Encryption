@@ -13,7 +13,7 @@ def update_progress():
         root.after(500, update_progress)  # update every 500ms
 
 def encrypt_file():
-    threading.Thread(target=File.encrypt, args=(1000,), daemon=True).start()
+    threading.Thread(target=File.encrypt, args=(10000,), daemon=True).start()
     root.after(500, update_progress)  # Schedule the first progress update
 
 progress = ttk.DoubleVar(root, 0)
@@ -24,3 +24,5 @@ button = ttk.Button(style="success", text="Press", command=encrypt_file)
 button.pack()
 
 root.mainloop()
+
+File.decrypt("final.txt")
