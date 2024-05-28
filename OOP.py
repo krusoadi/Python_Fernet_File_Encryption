@@ -23,7 +23,7 @@ class App(ttk.Window):
         self.progressBar = ttk.Progressbar(master=self, variable=self.progress, maximum=10, style="success", length=400)
         self.progressBar.pack()
 
-    def setFileName(self):
+    def set_file_name(self):
         Filename = askopenfilename()
         Keyfile = dirname(Filename) + "/fernet.key"
 
@@ -36,14 +36,14 @@ class App(ttk.Window):
 
     def encrypt_file(self):
         self.progress.set(0)
-        self.setFileName()
+        self.set_file_name()
 
         threading.Thread(target=self.file.encrypt, args=(100,), daemon=True).start()
         self.after(500, self.update_progress)
 
     def decrypt_file(self):
         self.progress.set(0)
-        self.setFileName()
+        self.set_file_name()
 
         threading.Thread(target=self.file.decrypt, args=("final.txt",), daemon=True).start()
         self.after(500, self.update_progress)
