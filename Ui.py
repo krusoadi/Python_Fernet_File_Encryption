@@ -107,7 +107,10 @@ class EncryptPage(WorkPage):  # TODO reading unit
 
         self.label = ttk.Label(self, text=self.text, font=('Helvetica', 12, 'bold'))
         self.file_manage = EncryptFileEntry(self)
-        self.ready_button = ttk.Button(self, text="Encrypt", command=self._encrypt, style="success")
+
+        # Put it in a frame -> ready + back
+
+        self.Buttons = ButtonContainer(self, "Encrypt")
 
         self.bottom_space = ttk.Frame(self)  # Bottom spacer
 
@@ -115,7 +118,8 @@ class EncryptPage(WorkPage):  # TODO reading unit
 
         self.label.pack(anchor="center", pady=10)
         self.file_manage.pack(anchor="center", pady=10)
-        self.ready_button.pack(anchor="center", pady=10)
+
+        self.Buttons.pack(anchor="center", pady=10)
 
         self.bottom_space.pack(side=BOTTOM, fill=BOTH, expand=YES)  # Bottom Spacer pack
 
@@ -130,6 +134,29 @@ class EncryptPage(WorkPage):  # TODO reading unit
 
         threading.Thread(target=self.file.encrypt, args=(100,), daemon=True).start()
         self.after(500, self.update_progress)
+
+
+class ButtonContainer(ttk.Frame):
+    def __init__(self, master: WorkPage, button_name: str, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.is_ready = ttk.BooleanVar(self, False, "is_ready")
+
+        self.ready_button = ttk.Button(self, text=button_name, command=self._set_ready, style="success")
+        self.back_button = ttk.Button(self, text="Back", command=self._back_button_press(), style="danger")
+
+        self.ready_button.grid(row=0, column=0, padx=10)
+        self.back_button.grid(row=0, column=1, padx=10)
+
+    def _set_ready(self):
+        self.is_ready.set(True)
+
+    def is_ready_pressed(self):
+        return self.is_ready.get()
+
+    def _back_button_press(self):
+        MainFrame(self.master.master, height=self.master.master.winfo_height(), width=self.master.master.winfo_width())
+        self.master.destroy()
 
 
 class EntryWithBrowse(ttk.Frame):

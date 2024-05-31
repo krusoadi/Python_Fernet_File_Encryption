@@ -1,0 +1,46 @@
+@startuml
+
+class App {
+  +App()
+  +mainloop()
+}
+
+class MainFrame {
+  +MainFrame(master: MainFrame, height: int, width: int)
+  +_encrypt_button()
+  +_decrypt_button()
+}
+
+class ButtonFrame {
+  +ButtonFrame(master: MainFrame)
+  +_encrypt_button()
+  +_decrypt_button()
+}
+
+class WorkPage {
+  +WorkPage(master: MainFrame)
+  +update_progress()
+}
+
+class EncryptPage {
+  +EncryptPage(master: MainFrame)
+  +_encrypt()
+}
+
+class EntryWithBrowse {
+  +EntryWithBrowse(master: EncryptPage)
+  +_search_for_file()
+  +_on_press()
+  +get_file_path()
+}
+
+class EncryptFileEntry {
+  +EncryptFileEntry(master: EncryptPage)
+  +_on_press()
+  +get_key_path()
+}
+
+EncryptPage --|> WorkPage
+EncryptFileEntry --|> EntryWithBrowse
+
+@enduml
